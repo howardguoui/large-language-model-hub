@@ -427,8 +427,297 @@ export const longcatSeries: TopicContent = {
   id: 'longcat-series',
   emoji: '🍐',
   title: { en: 'LongCat Series', zh: 'LongCat系列' },
-  contentType: 'coming-soon',
-  content: { en: '', zh: '' },
+  contentType: 'article',
+  content: {
+    en: `### LongCat Series
+
+#### LongCat-Video
+
+Over the past few years, AI has shown us the miracle of language understanding. ChatGPT can write articles and Midjourney can draw pictures, but for machines to truly understand and predict the world, a deeper level of intelligence is needed—that is, a "World Model".
+
+The so-called world model is to let AI no longer stay at the level of symbols and data, but be able to see the world like a human, understand physical laws, and deduce spatio-temporal logic. To achieve this, the most natural path is to let the model generate video. Because video itself is the sequence data closest to the real world: it contains geometry, semantics, physics, movement, and even emotion simultaneously.
+
+Therefore, Meituan's LongCat team took the first step in exploring the world model—launching **LongCat-Video**, a forward-looking foundational video generation model.
+
+![LongCat-Video Overview](/images/longcat-2.jpg)
+
+##### 1. Unified Architecture
+
+LongCat-Video is based on the **Diffusion Transformer (DiT)** architecture. Its biggest highlight is that it is a **multi-task unified model**.
+
+![LongCat-Video Unified Architecture](/images/longcat-2.jpg)
+
+The team did not reinvent the wheel separately for different tasks (text-to-video, image-to-video, video continuation), but rather differentiated the tasks through the innovative mechanism of "number of conditioning frames":
+- Unconditional frame → Text-to-Video
+- 1 condition frame → Image-to-Video
+- Multi-condition frames → Video Extension
+
+![LongCat-Video Generations](/images/longcat-3.jpg)
+
+This design is very elegant, as it naturally forms a task loop for text-to-video / image-to-video / continuation, as if letting the model itself decide "whether to refer to historical frames".
+
+**1.1 Text-to-Video**
+On the T2V (Text-to-Video) task, LongCat-Video can generate **720p, 30 fps** high-definition videos, and can accurately understand the objects, characters, scenes, styles, and other elements described in the text.
+Judging from the results, it has reached the open-source SOTA level in both semantic consistency and visual quality. In other words, the AI can truly capture the vibe of that "aerial tracking shot of the city at dusk".
+
+**1.2 Image-to-Video: Making Static Paintings Move**
+In the I2V task, the model can strictly preserve the main subject attributes, background relationships, and overall style of the reference image, while ensuring the dynamic process conforms to physical laws.
+Whether the input is a character portrait, an oil painting, or a portrait photo, LongCat-Video can animate it naturally, rather than mechanically swaying a few frames.
+It performs particularly well on two indicators: content consistency and dynamic smoothness.
+
+**1.3 Video Extension: The Key to Minute-Level Long Videos**
+This is also LongCat-Video's most differentiated capability.
+The model can natively continue the video content based on multi-frame conditions, achieving cross-frame spatio-temporal consistency and the generation of physically reasonable long videos.
+Thanks to the **Block-Causal Attention** mechanism and **GRPO** post-training strategy, the model can stably output coherent videos up to **5 minutes** long, with almost no quality degradation.
+
+![LongCat-Video Video Extension Performance](/images/longcat-4.jpg)
+
+Common long video problems—color drift, disjointed movements, picture collapse—have all been resolved.
+Combined with Block Sparse Attention (BSA) and the condition token caching mechanism, LongCat-Video remains highly efficient even when processing long sequences of over 90 frames, truly breaking the industry bottleneck that "length and quality cannot be obtained simultaneously."
+
+##### 2. Efficient Inference
+
+The computational amount of long video generation is astounding. The Meituan team found a balance through triple optimization:
+
+**2.1 Coarse-to-Fine (C2F) Generation**
+First generate 480p low frame rate video, and then super-resolve it to 720p 30 fps using the LoRA module.
+
+![LongCat-Video Coarse-to-Fine Generation](/images/longcat-4.jpg)
+
+**2.2 Block Sparse Attention (BSA)**
+Only calculate the top-r key block attention, reducing the computation amount to below 10%.
+
+![LongCat-Video Block Sparse Attention](/images/longcat-5.jpg)
+
+**2.3 Model Distillation (CFG + Consistency Distillation)**
+Compresses inference steps from 50 to 16.
+
+![LongCat-Video Model Distillation](/images/longcat-5.jpg)
+
+Ultimately achieving a **10x inference speedup** while maintaining SOTA image quality—truly achieving "fast, stable, and clear".
+
+##### 3. Evaluation Results
+
+In public benchmarks such as VBench, LongCat-Video reaches SOTA levels in two core tasks: Text-to-Video and Image-to-Video, with a parameter scale of 13.6 billion.
+The model leads comprehensively in dimensions such as text alignment, visual quality, motion coherence, and overall quality, demonstrating tremendous potential in the direction of world models.
+
+Returning to the initial question — **to make AI truly understand the world, we must let it first "comprehend" the world.**
+LongCat-Video is exactly the starting point towards this goal. It is not just a video generator, but a world simulator that can reconstruct physical laws in digital space. In the future, such models will become the foundation for scenarios like autonomous driving, embodied intelligence, and digital humans.
+And for those of us learning AI and in the AI industry, it also reminds us: **at the end of the world model, it is not just the model, but the understanding of the world itself.**
+
+---
+
+#### LongCat-Flash-Omni
+
+In 2025, when the multimodal wave was accelerating, Meituan once again delivered an amazing answer. Following LongCat-Flash-Chat and LongCat-Flash-Thinking, the LongCat series welcomes a new member — **LongCat-Flash-Omni**.
+
+![LongCat-Flash Architecture](/images/longcat-1.jpg)
+
+It is not only an important upgrade by the Meituan LongCat team following their large language model but also the first time the open-source community achieves a model integrating **"full modal coverage + end-to-end architecture + large parameter efficient inference"**.
+
+##### 1. From Flash to Omni
+
+The LongCat-Flash series has always been known for its **efficient architecture and ultimate response speed**. Omni builds upon this and takes a step from single input to "full-modal synergy."
+
+**LongCat-Flash-Omni = Efficient Architecture + Multimodal Perception + Real-time Voice Interaction**
+
+It integrates various input forms such as vision, audio, text, and video. Through the innovative **Shortcut-Connected MoE (ScMoE) architecture** (including zero-computation experts), it achieves a streaming interactive experience with millisecond-level low latency while maintaining massive parameter scale (total parameters 560 billion, activated 27 billion).
+
+This means that even when facing audio and video inputs lasting several minutes, it can still achieve **real-time response and natural communication**.
+
+##### 2. End-to-End Architecture
+
+Unlike traditional multimodal models (which are often spliced together by independent perceptors + text models), LongCat-Flash-Omni adopts a fully **end-to-end integrated design**:
+- **Vision Encoder**: Lightweight and efficient, with only about 600 million parameters
+- **Audio Codec**: Supports voice perception and reconstruction, directly generating natural speech
+- **Core LLM**: Directly processes multimodal tokens such as images, text, and voice
+- **Streaming Inference Engine**: Supports 128K tokens context and 8 minutes of audio/video interaction
+
+The key to this design is: all modalities are processed synergistically in a unified token space. The LLM is no longer a backend translation machine, but the **central processor of multimodal information**.
+
+Therefore, Omni can not only "understand what the video is about," but also "understand your tone" and "read your expressions" during a conversation, achieving true "listen, look, speak, think" integrated intelligence.
+
+##### 3. Progressive Multimodal Fusion
+
+The biggest challenge for full multimodal models is that data distributions of different modalities are completely different. Omni's solution is **Progressive Early Fusion**.
+
+It divides the complex multimodal learning process into six stages, starting from language and gradually incorporating auditory and visual capabilities:
+- **Stage 0: Text Pre-training** — establishing language understanding basics
+- **Stage 1: Voice Introduction** — aligning acoustic representations with the language feature space
+- **Stage 2: Image-Text Fusion** — incorporating large-scale image-text alignment corpora
+- **Stage 3: Video Understanding** — introducing dynamic video data, enhancing spatiotemporal reasoning
+- **Stage 4: Context Expansion** — context window expanded to 128K tokens
+- **Stage 5: Voice Alignment Training** — alleviating information loss from discrete tokens and improving voice fidelity
+
+This layer-by-layer injection strategy allows Omni to achieve **true multimodal synergy** while maintaining stable text capabilities; modalities no longer hinder each other but enhance one another.
+
+##### 4. Performance
+
+In comprehensive evaluations (Omni-Bench, WorldSense), LongCat-Flash-Omni reached the most advanced state-of-the-art (SOTA) level in the open source community.
+Its single modality and cross modality performances are equally impressive.
+
+Moreover, Omni also performed outstandingly in end-to-end interaction scoring. Evaluated by 250 users and 10 experts, its naturalness and fluency scored **0.56 points higher than current best open source model Qwen3-Omni**, approaching closed source flagships.
+
+##### 5. Efficient Inference
+
+Another core breakthrough of Omni is maintaining millisecond-level response even under the 560-billion parameter scale. The secret resides in the combination of the ScMoE (Shortcut-Connected Mixture of Experts) architecture and "zero-computation experts."
+
+- ScMoE allows the model to only activate partial experts (about 27 billion parameters), drastically reducing computing costs
+- Zero computation experts allow routing layers to quickly skip redundant branches, enabling stream processing
+- Combined with a "chunk-styled audio-visual feature interleaving mechanism" ensures the continuity and low latency of audio and video processing
+
+Ultimately, Omni became the first system in the open-source realm to achieve **"Large Model + Real-Time Interaction"**.
+
+The emergence of LongCat-Flash-Omni marks a turning point. AI is no longer just a language expert, but a true multimodal agent that can perceive the world. It can look at pictures, listen to sounds, understand tone, generate voice, and accomplish cross-modal reasoning within the same framework.
+
+This is not only a technological upgrade, but also another important leap in the direction of world models: **from understanding text → understanding senses → understanding the world**.
+
+When AI possesses multimodal perception capabilities, it also attains the sensory interface into embodied intelligence; multimodal intelligence is transitioning from stacked functionalities to unified understanding.`,
+    zh: `### LongCat系列
+
+#### LongCat-Video
+
+过去几年，AI让我们见识了语言理解的奇迹。ChatGPT 能写文章、Midjourney 能画画，但让机器真正理解并预测世界，还需要更深一层的智能——那就是「世界模型」（World Model）。
+
+所谓世界模型，就是让AI不再停留在符号和数据的层面，而是能像人一样看见世界、理解物理规律、推演时空逻辑。要做到这点，最自然的路径就是让模型去生成视频。因为视频本身是最接近真实世界的序列数据：它同时包含了几何、语义、物理、运动乃至情绪。
+
+于是，美团 LongCat 团队迈出了探索世界模型的第一步——推出 **LongCat-Video**，一个面向未来的视频生成基础模型。
+
+![LongCat-Video Overview](/images/longcat-2.jpg)
+
+##### 一、统一架构
+
+LongCat-Video 基于 **Diffusion Transformer (DiT)** 架构，最大亮点在于它是一个**多任务统一模型**。
+
+![LongCat-Video Unified Architecture](/images/longcat-2.jpg)
+
+团队并没有为不同任务（文生视频、图生视频、视频续写）单独造轮子，而是通过「条件帧数量」这一创新机制区分任务：
+- 无条件帧 → 文本生成视频（Text-to-Video）
+- 1 帧条件 → 图像生成视频（Image-to-Video）
+- 多帧条件 → 视频续写（Video Extension）
+
+![LongCat-Video Generations](/images/longcat-3.jpg)
+
+这种设计非常优雅，相当于让模型自己决定“要不要参考历史帧”，自然地形成了文生/图生/续写的任务闭环。
+
+**1.1 文本生视频**
+在 T2V（Text-to-Video）任务上，LongCat-Video 可生成 **720p、30 fps** 高清视频，能准确理解文本中描述的物体、人物、场景、风格等要素。
+从结果来看，它在语义一致性与视觉质量上都达到开源 SOTA 级别。换句话说，你描述的“黄昏下的城市航拍镜头”，AI 真的能拍出那种氛围感。
+
+**1.2 图像生视频：让静态画动起来**
+I2V 任务中，模型能严格保留参考图像的主体属性、背景关系与整体风格，同时让动态过程符合物理规律。
+无论输入是一张角色立绘、一幅油画，还是一张人像照片，LongCat-Video 都能让它动得自然，而不是机械地摆动几帧。
+在内容一致性和动态平滑性两项指标上，它的表现尤为突出。
+
+**1.3 视频续写：分钟级长视频的关键**
+这也是 LongCat-Video 最具差异化的能力。
+模型可以基于多帧条件，原生续接视频内容，实现跨帧时序一致与物理运动合理的长视频生成。
+得益于 **Block-Causal Attention** 机制与 **GRPO** 后训练策略，模型可稳定输出长达 **5 分钟** 的连贯视频，几乎无画质衰减。
+
+![LongCat-Video Video Extension Performance](/images/longcat-4.jpg)
+
+常见的长视频问题——色彩漂移、动作断裂、画质崩坏——都被有效解决。
+配合块稀疏注意力（BSA）与条件 token 缓存机制，LongCat-Video 在处理 90 帧以上序列时依然高效，真正打破了“时长与质量不可兼得”的行业瓶颈。
+
+##### 二、高效推理
+
+长视频生成的计算量惊人，美团团队通过三重优化找到平衡：
+
+**2.1 粗到精生成（C2F）**
+先生成 480p 低帧率视频，再用 LoRA 模块超分到 720p 30 fps。
+
+![LongCat-Video Coarse-to-Fine Generation](/images/longcat-4.jpg)
+
+**2.2 块稀疏注意力（BSA）**
+只计算 top-r 关键块注意力，计算量降到 10% 以下。
+
+![LongCat-Video Block Sparse Attention](/images/longcat-5.jpg)
+
+**2.3 模型蒸馏（CFG + 一致性蒸馏）**
+将采样步骤从 50 步压缩至 16 步。
+
+![LongCat-Video Model Distillation](/images/longcat-5.jpg)
+
+最终实现 **10 倍推理速度提升**，同时保持 SOTA 画质——真正做到“又快又稳又清晰”。
+
+##### 三、评测结果
+
+在 VBench 等公开基准中，LongCat-Video 以 136 亿参数的体量，在 Text-to-Video 与 Image-to-Video 两项核心任务上均达 SOTA 水平。
+模型在文本对齐、视觉质量、运动连贯性、整体质量等维度全面领先，展示出世界模型方向上强大的潜力。
+
+回到最初的问题——**要让 AI 真正理解世界，我们得让它先“看懂”世界。**
+LongCat-Video 正是迈向这一目标的起点。它不只是一个视频生成器，更是一个能在数字空间中重构物理规律的世界模拟器。未来，这种模型将成为自动驾驶、具身智能、数字人等场景的基础。
+而对我们这些学习 AI 和在 AI 行业的人来说，它也提醒着我们：**世界模型的尽头，不只是模型，而是对世界本身的理解。**
+
+---
+
+#### LongCat-Flash-Omni
+
+在多模态浪潮加速的 2025 年，美团再次交出了一份令人惊艳的答卷。继 LongCat-Flash-Chat 与 LongCat-Flash-Thinking 之后，LongCat 系列迎来了新成员——**LongCat-Flash-Omni**。
+
+![LongCat-Flash Architecture](/images/longcat-1.jpg)
+
+它不仅是美团 LongCat 团队在大语言模型之后的重要升级，更是开源社区首次实现**“全模态覆盖 + 端到端架构 + 大参数高效推理”**于一体的模型。
+
+##### 一、从 Flash 到 Omni
+
+LongCat-Flash 系列一直以**高效架构和极致响应速度**闻名，Omni 则在此基础上，迈出了从单一输入到“全模态协同”的一步。
+
+**LongCat-Flash-Omni = 高效架构 + 多模态感知 + 实时语音交互**
+
+它集成了视觉、音频、文本和视频等多种输入形式，并通过创新的 **Shortcut-Connected MoE（ScMoE）架构**（含零计算专家），在保持超大参数规模（总参数 5600 亿，激活 270 亿）的同时，实现了毫秒级低延迟的流式交互体验。
+
+这意味着，即使是面对长达数分钟的音视频输入，它依然能做到**实时响应与自然交流**。
+
+##### 二、端到端架构
+
+不同于传统的多模态模型（往往由独立的感知器 + 文本模型拼接而成），LongCat-Flash-Omni 采用了完全**端到端的一体化设计**：
+- **视觉编码器**：轻量高效，参数量仅约 6 亿；
+- **音频编解码器**：支持语音感知与重建，直接生成自然语音；
+- **核心 LLM**：直接处理图像、文本、语音等多模态 token；
+- **流式推理引擎**：支持 128K tokens 上下文与 8 分钟音视频交互。
+
+这种设计的关键在于：所有模态都在统一的 token 空间内协同处理，LLM 不再是后端翻译机，而是成为**多模态信息的中枢处理器**。
+
+因此，Omni 不仅能“理解视频讲的是什么”，还能在对话中“听懂你的语气”“看懂你的表情”，实现真正的“听、看、说、想”一体化智能。
+
+##### 三、渐进式多模融合
+
+全模态模型的最大难题是——不同模态的数据分布完全不同。Omni 的解决思路是**渐进式早期多模融合训练（Progressive Early Fusion）**。
+
+它把复杂的多模态学习过程分为六个阶段，从语言出发，逐步融入听觉与视觉能力：
+- **阶段 0：文本预训练** —— 奠定语言理解基础；
+- **阶段 1：语音引入** —— 对齐声学表征与语言特征空间；
+- **阶段 2：图文融合** —— 加入大规模图像-文本对齐语料；
+- **阶段 3：视频理解** —— 引入动态视频数据，提升时空推理；
+- **阶段 4：上下文扩展** —— 上下文窗口拓展至 128K tokens；
+- **阶段 5：语音对齐训练** —— 缓解离散 token 信息丢失，提升语音保真度。
+
+这种逐层注入策略让 Omni 在保持稳定文本能力的同时，实现了**真正的全模态协同**，各模态之间不再相互牵制，而是互相增强。
+
+##### 四、性能
+
+在综合评估（Omni-Bench、WorldSense）中，LongCat-Flash-Omni 达到了开源最先进水平（SOTA）。
+其单模态与跨模态表现同样亮眼。
+
+不仅如此，Omni 在端到端交互评分中也表现突出，在 250 名用户与 10 名专家评测中，其自然度与流畅度比当前最优开源模型 **Qwen3-Omni 高出 0.56 分**，接近闭源旗舰。
+
+##### 五、高效推理
+
+Omni 的另一项核心突破，是在 5600 亿参数规模下依然保持毫秒级响应，秘诀在于 ScMoE（Shortcut-Connected Mixture of Experts）架构与“零计算专家”的组合。
+
+- ScMoE 让模型只激活部分专家（约 270 亿参数），极大降低计算成本；
+- 零计算专家让路由层可以快速跳过冗余分支，实现流式处理；
+- 结合“分块式音视频特征交织机制”，保证音视频处理的连续性与低延迟。
+
+最终，Omni 成为首个在开源范畴内实现**“大模型 + 实时交互”**的系统。
+
+LongCat-Flash-Omni 的出现标志着一个转折点，AI 不再只是语言专家，而是一个能真正感知世界的多模态智能体，它能看图、能听声、能理解语气、能生成语音，并在同一框架下完成跨模态推理。
+
+这不只是一次技术升级，更是世界模型方向的又一次重要跃迁：**从理解文字 → 理解感官 → 理解世界**。
+
+当 AI 拥有了多模态感知能力，它也就拥有了通向具身智能的感知接口，多模态智能正在从功能叠加走向统一理解。`
+  },
 }
 
 export const kimiSeries: TopicContent = {
