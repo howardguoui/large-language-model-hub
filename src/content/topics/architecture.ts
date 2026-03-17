@@ -724,6 +724,57 @@ export const kimiSeries: TopicContent = {
   id: 'kimi-series',
   emoji: '🍑',
   title: { en: 'Kimi Series', zh: 'Kimi系列' },
-  contentType: 'coming-soon',
-  content: { en: '', zh: '' },
+  contentType: 'article',
+  content: {
+    en: `### Kimi Series
+
+This article introduces two key technologies in the Kimi series: **Kimi Linear** and **Kimi K2 Thinking**, highlighting their innovations, performance, and engineering implementations.
+
+#### Kimi Linear
+
+1. **Kimi Linear's Innovation**: Kimi Linear is a hybrid linear attention architecture that surpasses the full attention architecture in multiple scenarios. Its superiority comes from the Kimi Delta Attention (KDA) module and hardware optimization.
+2. **KDA Module**: KDA is the core of Kimi Linear, featuring a finer-grained gating mechanism that enhances the model's ability to capture long-sequence information and its overall expressiveness.
+3. **Hybrid Architecture**: Kimi Linear combines KDA with Multi-Head Latent Attention (MLA), pre-training a model with 3B activated parameters and 48B total parameters, proving its feasibility in large-scale model training.
+4. **Hardware Optimization**: A bespoke chunkwise algorithm was developed, reducing the computational load, achieving a 75% reduction in KV cache usage, and a 6-fold increase in 1M context decoding throughput.
+
+#### Kimi K2 Thinking
+
+Kimi K2 Thinking's design concept revolves around **"thinking + long-sequence tool call"** as the core, aiming to resolve the bottlenecks of traditional large language models in long-sequence tasks.
+
+**K2's Performance and Engineering Implementation:**
+- **Agentic Search/Browsing**: BrowseComp = 60.2% (far exceeding the human baseline of 29.2%), demonstrating K2's significant advantages in dynamic web retrieval, evidence aggregation, and long-term information tracking.
+- **Coding/Engineering Capabilities**: SWE-Bench Verified = 71.3%; LiveCodeBench, OJ-Bench, etc., show its practical implementation capabilities in multi-language programming, algorithmic problems, and terminal interaction scenarios.
+- **Multilingual/Multitask Generalization**: It shows robust performance across various tasks (MMLU, AIME, HMMT, etc.) in both no-tool and with-tool settings, indicating the horizontal generalization ability of the foundational reasoning model.
+
+These achievements emphasize the tremendous impact of toolchains and thinking budgets on final capabilities—it is not simply about scaling up parameters, but constructing a coherent, long-term reasoning/tool framework.
+
+**Core Contributions:**
+The core contribution of Kimi K2 Thinking lies in **incorporating "thinking" and "tool calling" as two runtime resources into the model's design and evaluation scope**. Through engineering techniques (long context management, tool protocols, QAT, parallel sequence aggregation), it bridges the gap between laboratory capabilities and practical usability.
+It is not merely scaling up the model size; it redefines how to **scale reasoning capabilities at test-time**: more thinking tokens, more tool steps, and a more robust reasoning loop.`,
+    zh: `### Kimi系列
+
+本文介绍了 Kimi 系列的两项核心技术：**Kimi Linear** 和 **Kimi K2 Thinking**，重点展示了它们的创新点、性能表现和工程实现。
+
+#### Kimi Linear
+
+1. **Kimi Linear 的创新**：Kimi Linear 是一种混合线性注意力架构（hybrid linear attention architecture），在多个场景下超越了全注意力（full attention）架构。它的优势来源于 Kimi Delta Attention（KDA）模块和硬件优化。
+2. **KDA 模块**：KDA 是 Kimi Linear 的核心，具有更细粒度的门控机制，增强了模型捕捉长序列信息的能力和表达能力。
+3. **混合架构**：Kimi Linear 将 KDA 与多头潜在注意力（Multi-Head Latent Attention, MLA）结合，预训练了一个拥有 3B 激活参数和 48B 总参数的模型，证明了其在大规模模型训练中的可行性。
+4. **硬件优化**：开发了定制的 chunkwise 算法，降低了计算负载，实现了 KV cache 使用量降低 75%，并将 1M 上下文解码吞吐量提升了 6 倍。
+
+#### Kimi K2 Thinking
+
+Kimi K2 Thinking 的设计理念以“思考 + 长序列工具调用（thinking + long-sequence tool call）”为核心，旨在解决传统大语言模型在长序列任务中的瓶颈。
+
+**K2 的性能与工程实现：**
+- **Agentic 搜索/浏览**：BrowseComp = 60.2%（远超人类 baseline 29.2%），说明 K2 在动态网页检索、证据聚合、长期信息追踪上有显著优势。
+- **编码/工程能力**：SWE-Bench Verified = 71.3%；LiveCodeBench、OJ-Bench 等显示在多语言编程、算法题、终端交互场景有实际落地能力。
+- **多语言/多任务泛化**：报告中的多项任务（MMLU、AIME、HMMT 等）在 no-tool/with-tool 两种设定下都有稳健表现，表明基础思考模型的横向泛化能力。
+
+这些成绩强调了工具链和思考预算对最终能力的巨大影响 —— 不是单纯把参数做大，而是构建长期一致的推理与工具框架。
+
+**核心贡献：**
+Kimi K2 Thinking 的核心贡献在于**把“思考”与“工具调用”两项运行时资源纳入模型设计与评测范畴**，并通过工程化手段（长上下文管理、工具协议、QAT、并行轨迹聚合）把实验室能力推进到可用水平。
+它不是简单地把模型做大，而是重新定义了如何在**测试时（test-time）扩大推理能力**：更多的思考 token、更多的工具步数，以及更稳健的推理闭环。`
+  },
 }
