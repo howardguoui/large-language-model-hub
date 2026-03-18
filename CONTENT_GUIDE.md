@@ -33,16 +33,17 @@
 - [x] 🍉 大模型的发展历程
 - [x] 🍊 大模型的应用场景
 - [x] 🍌 原始 Transformer 结构回顾
-- [x] 🍓 数据准备
+- [x] 🫐 数据存储
 
 ### Next Up
+- [ ] 🍍 MOE
+- [ ] 🥭 GPT系列
+- [ ] 🍎 LLAMA系列
+- [ ] 🍏 DeepSeek系列
+- [ ] 🍐 LongCat系列
+- [ ] 🍑 Kimi系列
+- [ ] 🍓 数据准备
 - [ ] 🥝 GPU vs TPU
-- [x] 🍍 MOE
-- [x] 🥭 GPT系列
-- [x] 🍎 LLAMA系列
-- [x] 🍏 DeepSeek系列
-- [x] 🍐 LongCat系列
-- [x] 🍑 Kimi系列
 
 ---
 

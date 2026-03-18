@@ -6,25 +6,7 @@ export const dataPreparation: TopicContent = {
   title: { en: 'Data Preparation', zh: '数据准备' },
   contentType: 'article',
   content: {
-    en: `## Data Pipeline and Storage Architecture: The New Bottleneck
-
-In the era of large language models, AI training and inference are no longer purely a matter of **compute power**. With model parameters scaling into the tens of billions and data volumes expanding to TB~PB scales, **data pipelines and storage architecture** often become the determining factor affecting training speed. No matter how powerful the compute is, if data loading can't keep up, GPUs will end up idle waiting for I/O, greatly reducing training efficiency.
-
-In practical deployments, data typically adopts a **three-tier "hot-warm-cold" architecture**:
-
-- **Hot Layer**: Stores data and indices actively used during training. Has extreme requirements for IOPS and throughput. Common deployment uses local NVMe or high-performance distributed file systems.
-- **Warm Layer**: Handles team sharing and version management. Generally uses object storage (e.g., Ceph, MinIO) or distributed file systems.
-- **Cold Layer**: Archives long-term storage for historical versions and rarely accessed datasets. Uses cost-effective storage like cloud cold storage or tape.
-
-For file formats, **sequential streamable containerized shards** are the mainstream choice: WebDataset (tar shards), TFRecord, Parquet, or LMDB. A reasonable shard size (typically 100MB–2GB) both reduces metadata overhead and accommodates network bandwidth and node memory constraints. To support reproducible and resumable training, sample-level indices and global shuffle maps are essential. Similarly, text can use MinHash/SimHash, and images can use perceptual hashing to avoid invalid data amplification.
-
-**Data versioning** cannot be overlooked either. By tagging data with semantic versions (e.g., \`imagenet-1.0.3\`) and using tools like DVC or LakeFS, you maintain consistency and traceability across "Data—Code—Model."
-
-**Preprocessing and data augmentation** are another critical efficiency factor. A universal principle is: **do offline what you can**. Offline processing is ideal for fixed procedures like decoding, normalization, tokenization, image resizing, or cropping—significantly reducing CPU load during training and ensuring stable throughput. Online processing suits augmentation requiring randomness or variety (random cropping, color jittering, MixUp/CutMix, SpecAugment), since these operations clearly improve generalization and are often lightweight and vectorizable.
-
-To prevent GPU idling due to I/O bottlenecks, **cache design** is vital. At the local machine level, make full use of **Page Cache and mmap**—large sequential reads dramatically improve cache hit rates. At the cluster level, deploy Redis, RocksDB, or Alluxio as a shared caching layer for hot data and indices, managed through data version numbers with asynchronous cleanup after training.
-
-## Common Data Sources
+    en: `## Common Data Sources
 
 1. **WebText**
    - Requires attention to copyright and legality, while selecting high-quality content.
@@ -80,25 +62,7 @@ From a data perspective, the key to LLM training is not just large volume, but m
 3. **Augmentation and Synthesis**: Moderate augmentation makes the model more stable and reliable.
 
 It can be said that no matter how large the model is, if the data is not good enough, what is trained will only be theoretical. High-quality, rich, and multimodal data is the true source of an LLM's power.`,
-    zh: `## 数据管线与存储架构：新的瓶颈
-
-在大模型时代，AI 的训练与推理已经不再是单纯的**算力问题**。随着模型参数规模进入百亿级、数据量级扩展到 TB~PB，**数据管线与存储架构**往往成为影响训练速度的决定性因素。算力再强，如果数据加载跟不上，也会出现 GPU 空闲等待 I/O 的情况，训练效率大打折扣。
-
-在实际落地中，数据通常采用"**热、温、冷**"三层架构：
-
-- **Hot 层（热层）**：存放的是训练时活跃的数据和索引，对 IOPS 和吞吐有极高要求，常见部署方式是本地 NVMe 或高性能分布式文件系统。
-- **Warm 层（温层）**：承担团队共享和版本管理，一般使用对象存储（如 Ceph、MinIO）或分布式文件系统。
-- **Cold 层（冷层）**：长期存储历史版本和低频访问数据，通常采用成本低廉的云冷存或磁带存储。
-
-在文件格式上，**顺序可流式读取的容器化分片**是主流选择，如 WebDataset（tar 分片）、TFRecord、Parquet 或 LMDB。合理的分片大小（通常在 100MB~2GB 之间）既能降低元数据开销，又能兼顾网络带宽与节点内存。为了支持可重复、可恢复训练，还需要建立样本级索引和全局 shuffle map。同样重要，文本可以使用 MinHash/SimHash，图像可用感知哈希，避免无效数据放大。
-
-数据的**版本管理**也不可忽视。通过打标签和语义化版本号（如 \`imagenet-1.0.3\`），配合 DVC 或 LakeFS 等工具，可以让"数据—代码—模型"保持一致性和可追溯性。
-
-**预处理和数据增强**是训练效率的另一大关键。一个普遍的原则是：**能离线就离线**。离线处理适合完成解码、标准化、分词、图像 resize 或裁剪等固定流程，这样能显著降低训练时的 CPU 压力，并保证数据吞吐稳定。而在线处理则更适合需要随机性或多样化的增强手段，比如随机裁剪、颜色抖动、MixUp/CutMix、SpecAugment 等。这类操作对模型泛化能力帮助明显，且往往轻量、可矢量化。
-
-为了避免 GPU 因 I/O 停摆，**缓存设计**至关重要。在本地机器层面，可以充分利用 **Page Cache 和 mmap**，大块顺序读能极大提升缓存命中率。在集群层面，可以部署 Redis、RocksDB 或 Alluxio 作为热点数据和索引的共享缓存层，通过数据版本号来管理一致性，训练任务完成后再异步清理。
-
-## 常见数据源
+    zh: `## 常见数据源
 
 1. **WebText**
    - 需要注意版权和合法性，同时挑选质量较高的内容。
@@ -164,7 +128,17 @@ export const dataStorage: TopicContent = {
   title: { en: 'Data Storage', zh: '数据存储' },
   contentType: 'article',
   content: {
-    en: `## File Formats and Version Management
+    en: `## Data Pipeline and Storage Architecture: The New Bottleneck
+
+In the era of large language models, AI training and inference are no longer purely a matter of **compute power**. With model parameters scaling into the tens of billions and data volumes expanding to TB~PB scales, **data pipelines and storage architecture** often become the determining factor affecting training speed. No matter how powerful the compute is, if data loading can't keep up, GPUs will end up idle waiting for I/O, greatly reducing training efficiency.
+
+In practical deployments, data typically adopts a **three-tier "hot-warm-cold" architecture**:
+
+- **Hot Layer**: Stores data and indices actively used during training. Has extreme requirements for IOPS and throughput. Common deployment uses local NVMe or high-performance distributed file systems.
+- **Warm Layer**: Handles team sharing and version management. Generally uses object storage (e.g., Ceph, MinIO) or distributed file systems.
+- **Cold Layer**: Archives long-term storage for historical versions and rarely accessed datasets. Uses cost-effective storage like cloud cold storage or tape.
+
+## File Formats and Version Management
 
 For file formats, **sequential streamable containerized shards** are the mainstream choice, such as WebDataset (tar shards), TFRecord, Parquet, or LMDB. A reasonable shard size (typically between 100MB and 2GB) can reduce metadata overhead while balancing network bandwidth and node memory. To support reproducible and resumable training, establishing sample-level indices and global shuffle maps is required. Also important is avoiding invalid data amplification by using MinHash/SimHash for text and perceptual hashing for images.
 
@@ -220,7 +194,17 @@ Furthermore, LLM training often uses **packed samples** techniques to concatenat
 Finally, the impact of the network and scheduling levels on training throughput cannot be ignored. Topology-aware scheduling ensures training nodes are located as close to data storage gateways as possible, reducing latency and costs associated with crossing racks or availability zones. High-speed interconnects (like RDMA, InfiniBand, RoCE) ensure that gradient communication and data I/O do not compete for bandwidth.
 
 When budgeting bandwidth, a preliminary estimation formula is: **Per GPU sample size × QPS × Number of nodes**, leaving a 20%~30% margin. If bottlenecks are found, throttling and backpressure mechanisms can be added at the data entry point to prevent cluster overload.`,
-    zh: `## 文件格式与版本管理
+    zh: `## 数据管线与存储架构：新的瓶颈
+
+在大模型时代，AI 的训练与推理已经不再是单纯的**算力问题**。随着模型参数规模进入百亿级、数据量级扩展到 TB~PB，**数据管线与存储架构**往往成为影响训练速度的决定性因素。算力再强，如果数据加载跟不上，也会出现 GPU 空闲等待 I/O 的情况，训练效率大打折扣。
+
+在实际落地中，数据通常采用"**热、温、冷**"三层架构：
+
+- **Hot 层（热层）**：存放的是训练时活跃的数据和索引，对 IOPS 和吞吐有极高要求，常见部署方式是本地 NVMe 或高性能分布式文件系统。
+- **Warm 层（温层）**：承担团队共享和版本管理，一般使用对象存储（如 Ceph、MinIO）或分布式文件系统。
+- **Cold 层（冷层）**：长期存储历史版本和低频访问数据，通常采用成本低廉的云冷存或磁带存储。
+
+## 文件格式与版本管理
 
 在文件格式上，**顺序可流式读取的容器化分片**是主流选择，如 WebDataset（tar 分片）、TFRecord、Parquet 或 LMDB。合理的分片大小（通常在 100MB~2GB 之间）既能降低元数据开销，又能兼顾网络带宽与节点内存。为了支持可重复、可恢复训练，还需要建立样本级索引和全局 shuffle map。同样重要，文本可以使用 MinHash/SimHash，图像可用感知哈希，避免无效数据放大。
 
