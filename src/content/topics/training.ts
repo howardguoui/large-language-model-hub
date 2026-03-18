@@ -138,6 +138,8 @@ In practical deployments, data typically adopts a **three-tier "hot-warm-cold" a
 - **Warm Layer**: Handles team sharing and version management. Generally uses object storage (e.g., Ceph, MinIO) or distributed file systems.
 - **Cold Layer**: Archives long-term storage for historical versions and rarely accessed datasets. Uses cost-effective storage like cloud cold storage or tape.
 
+This three-tier architecture is reflected in typical cluster deployments: **RW (read-write) and RO (read-only) nodes** at the top with **Shared Buffers** for each CPU, connected to a **SharedStorage** layer, ultimately backed by **OSS/HDFS/MinIO** object storage for cost-effective archival. Hot data flows from cold storage upward through compression and decompression steps, while reads are optimized by caching at each tier.
+
 ## File Formats and Version Management
 
 For file formats, **sequential streamable containerized shards** are the mainstream choice, such as WebDataset (tar shards), TFRecord, Parquet, or LMDB. A reasonable shard size (typically between 100MB and 2GB) can reduce metadata overhead while balancing network bandwidth and node memory. To support reproducible and resumable training, establishing sample-level indices and global shuffle maps is required. Also important is avoiding invalid data amplification by using MinHash/SimHash for text and perceptual hashing for images.
@@ -157,9 +159,27 @@ For NLP, tokenization and chunking can be done in advance to generate packed sam
 
 To avoid GPU idling due to I/O bottlenecks, **cache design** is crucial.
 
-At the local machine level, full use of **Page Cache and mmap** should be made, as large sequential reads can dramatically increase cache hit rates. Additionally, prefetching shards from object storage to local NVMe SSDs for use as a short-term cache can significantly boost efficiency in the first training epoch. A common practice is warm-up before training, pre-pulling data for the first few epochs to prevent initial throughput fluctuations.
+### Page Cache and Memory-Mapped I/O
 
-At the cluster level, Redis, RocksDB, or Alluxio can be deployed as a shared caching layer for hot data and indices. Cache consistency can be managed through data version numbers, with asynchronous cleanup or version eviction after training tasks complete to ensure resource utilization.
+At the local machine level, full use of **Page Cache and mmap** should be made, as large sequential reads can dramatically increase cache hit rates. The operating system's page cache acts as a buffer between applications and disk:
+
+- **(1) Pages Request**: Applications request pages through syscalls like `read()`, `pread()`, `readv()`, or leverage `mmap()` for file reads
+- **(2) Cache Hit**: If the page is already in cache, it returns immediately without disk I/O
+- **(3) Cache Miss**: On cache misses, the OS reads pages from the disk subsystem
+- **Write Operations**: Pages are marked with dirty flags via syscalls like `write()`, `pwrite()`, `writev()`, and `mmap()` writes
+- **Flush Mechanism**: Eventually flushed to disk via `pdflush`, `kswapd`, or sync flushes like `fsync()`/`msync()`
+
+Additionally, prefetching shards from object storage to local NVMe SSDs for use as a short-term cache can significantly boost efficiency in the first training epoch. A common practice is warm-up before training, pre-pulling data for the first few epochs to prevent initial throughput fluctuations.
+
+### Multi-tier Cluster Storage
+
+At the cluster level, Redis, RocksDB, or Alluxio can be deployed as a shared caching layer for hot data and indices. The architecture typically follows a **three-tier storage hierarchy**:
+
+- **Hot Tier (RW/Read-Only Nodes)**: Shared Buffers with read/write access to high-speed in-memory caches per CPU. Supports IOPS-intensive access patterns.
+- **Warm Tier (SharedStorage)**: Mid-tier shared storage layer for distributed access, supporting reads across multiple nodes.
+- **Cold Tier (OSS/HDFS/MinIO)**: Compressed object storage for long-term archival, with decompression on read. Lowest cost but highest latency.
+
+Cache consistency can be managed through data version numbers, with asynchronous cleanup or version eviction after training tasks complete to ensure resource utilization.
 
 A neat trick is to try to **use sequential reads and large-batch prefetches instead of frequent small-block random I/O**, which is particularly important for distributed training.
 
@@ -204,6 +224,8 @@ When budgeting bandwidth, a preliminary estimation formula is: **Per GPU sample 
 - **Warm 层（温层）**：承担团队共享和版本管理，一般使用对象存储（如 Ceph、MinIO）或分布式文件系统。
 - **Cold 层（冷层）**：长期存储历史版本和低频访问数据，通常采用成本低廉的云冷存或磁带存储。
 
+这种三层架构在实际集群部署中体现为：顶部的 **RW（读写）和 RO（只读）节点**各有 **Shared Buffers**，连接到 **SharedStorage** 中间层，最终由 **OSS/HDFS/MinIO** 对象存储作为成本优化的归档后端。热数据从冷存向上流动，经过压缩与解压步骤，而读取操作则通过各层缓存优化。
+
 ## 文件格式与版本管理
 
 在文件格式上，**顺序可流式读取的容器化分片**是主流选择，如 WebDataset（tar 分片）、TFRecord、Parquet 或 LMDB。合理的分片大小（通常在 100MB~2GB 之间）既能降低元数据开销，又能兼顾网络带宽与节点内存。为了支持可重复、可恢复训练，还需要建立样本级索引和全局 shuffle map。同样重要，文本可以使用 MinHash/SimHash，图像可用感知哈希，避免无效数据放大。
@@ -223,9 +245,27 @@ When budgeting bandwidth, a preliminary estimation formula is: **Per GPU sample 
 
 为了避免 GPU 因 I/O 停摆，**缓存设计**至关重要。
 
-在本地机器层面，可以充分利用 **Page Cache 和 mmap**，大块顺序读能极大提升缓存命中率。同时，将对象存储中的分片预拉取到本地 NVMe，作为短期缓存使用，也能明显提升首轮训练效率。常见做法是训练前做 warm-up，提前拉取头几个 epoch 所需数据，避免初期吞吐波动。
+### Page Cache 与内存映射 I/O
 
-在集群层面，可以部署 Redis、RocksDB 或 Alluxio 作为热点数据和索引的共享缓存层。缓存一致性可通过数据版本号来管理，训练任务完成后再异步清理或逐版本淘汰，保证资源利用率。
+在本地机器层面，可以充分利用 **Page Cache 和 mmap**，大块顺序读能极大提升缓存命中率。操作系统的页缓存充当应用程序和磁盘之间的缓冲：
+
+- **(1) 页面请求**：应用通过 `read()`、`pread()`、`readv()` 等系统调用请求页面，或通过 `mmap()` 进行文件读取
+- **(2) 缓存命中**：如果页面已在缓存中，立即返回，无需磁盘 I/O
+- **(3) 缓存缺失**：缓存未命中时，操作系统从磁盘子系统读取页面
+- **写操作**：通过 `write()`、`pwrite()`、`writev()` 和 `mmap()` 写操作将页面标记为 dirty
+- **刷盘机制**：最终通过 `pdflush`、`kswapd` 或同步刷新（`fsync()`/`msync()`）写回磁盘
+
+同时，将对象存储中的分片预拉取到本地 NVMe，作为短期缓存使用，也能明显提升首轮训练效率。常见做法是训练前做 warm-up，提前拉取头几个 epoch 所需数据，避免初期吞吐波动。
+
+### 多层集群存储架构
+
+在集群层面，可以部署 Redis、RocksDB 或 Alluxio 作为热点数据和索引的共享缓存层。存储架构通常遵循**三层存储层级**：
+
+- **热层（RW/只读节点）**：每个 CPU 的共享缓冲区，支持读写访问的内存缓存。适应 IOPS 密集型访问模式。
+- **温层（SharedStorage）**：中层共享存储，支持跨多节点的分布式读取。
+- **冷层（OSS/HDFS/MinIO）**：压缩对象存储用于长期归档，读取时解压。成本最低但延迟最高。
+
+缓存一致性可通过数据版本号来管理，训练任务完成后再异步清理或逐版本淘汰，保证资源利用率。
 
 一个小技巧是尽量**使用顺序读和大批量 prefetch，而不是频繁的小块随机 I/O**，这对分布式训练尤其重要。
 
