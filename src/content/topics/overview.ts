@@ -2,7 +2,6 @@ import type { TopicContent } from '../types'
 
 export const whatIsLLM: TopicContent = {
   id: 'what-is-llm',
-  emoji: '🍈',
   title: { en: 'What is a Large Model?', zh: '什么是大模型' },
   contentType: 'article',
   content: {
@@ -94,7 +93,6 @@ Understanding the essence of large models is the first step in learning and appl
 
 export const historyOfLLM: TopicContent = {
   id: 'history-of-llm',
-  emoji: '🍉',
   title: { en: 'History of Large Models', zh: '大模型的发展历程' },
   contentType: 'article',
   content: {
@@ -242,7 +240,6 @@ The large model ecosystem today can be summarized by a few key trends:
 
 export const applicationsOfLLM: TopicContent = {
   id: 'applications-of-llm',
-  emoji: '🍊',
   title: { en: 'LLM Application Scenarios', zh: '大模型的应用场景' },
   contentType: 'article',
   content: {

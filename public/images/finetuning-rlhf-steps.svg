@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 320" font-family="system-ui,-apple-system,sans-serif">
+  <rect width="860" height="320" fill="white"/>
+  <defs>
+    <marker id="a" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+      <polygon points="0 0,9 3.5,0 7" fill="#6b7280"/>
+    </marker>
+  </defs>
+
+  <!-- ── Step 1: SFT ── -->
+  <rect x="10" y="10" width="258" height="295" rx="10" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+  <text x="139" y="34" text-anchor="middle" font-size="12" font-weight="700" fill="#15803d">Step 1</text>
+  <text x="139" y="52" text-anchor="middle" font-size="11" fill="#374151">Collect demonstration data,</text>
+  <text x="139" y="66" text-anchor="middle" font-size="11" fill="#374151">train a supervised policy (SFT)</text>
+
+  <!-- Prompt box -->
+  <rect x="30" y="80" width="90" height="36" rx="6" fill="#dcfce7" stroke="#4ade80" stroke-width="1.5"/>
+  <text x="75" y="103" text-anchor="middle" font-size="11" fill="#15803d">Prompt</text>
+
+  <line x1="120" y1="98" x2="140" y2="98" stroke="#6b7280" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Human labeler -->
+  <rect x="142" y="80" width="90" height="36" rx="6" fill="#bbf7d0" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="187" y="98" text-anchor="middle" font-size="11" fill="#15803d">Human</text>
+  <text x="187" y="112" text-anchor="middle" font-size="11" fill="#15803d">Labeler</text>
+
+  <line x1="187" y1="116" x2="187" y2="136" stroke="#6b7280" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Response -->
+  <rect x="142" y="138" width="90" height="36" rx="6" fill="#dcfce7" stroke="#4ade80" stroke-width="1.5"/>
+  <text x="187" y="161" text-anchor="middle" font-size="11" fill="#15803d">Response</text>
+
+  <line x1="187" y1="174" x2="187" y2="194" stroke="#6b7280" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- SFT Model -->
+  <rect x="110" y="196" width="110" height="50" rx="8" fill="#86efac" stroke="#22c55e" stroke-width="2"/>
+  <text x="165" y="218" text-anchor="middle" font-size="12" font-weight="700" fill="#14532d">SFT</text>
+  <text x="165" y="234" text-anchor="middle" font-size="11" fill="#14532d">Model</text>
+
+  <text x="139" y="278" text-anchor="middle" font-size="10" fill="#16a34a">Fine-tuned on human</text>
+  <text x="139" y="292" text-anchor="middle" font-size="10" fill="#16a34a">demonstrations</text>
+
+  <!-- ── Step 2: Reward Model ── -->
+  <rect x="298" y="10" width="258" height="295" rx="10" fill="#fff7ed" stroke="#fdba74" stroke-width="1.5"/>
+  <text x="427" y="34" text-anchor="middle" font-size="12" font-weight="700" fill="#c2410c">Step 2</text>
+  <text x="427" y="52" text-anchor="middle" font-size="11" fill="#374151">Collect comparison data,</text>
+  <text x="427" y="66" text-anchor="middle" font-size="11" fill="#374151">train a reward model (RM)</text>
+
+  <!-- Multiple outputs -->
+  <rect x="316" y="80" width="82" height="30" rx="5" fill="#fed7aa" stroke="#fb923c" stroke-width="1"/>
+  <text x="357" y="100" text-anchor="middle" font-size="10" fill="#9a3412">Output A</text>
+  <rect x="316" y="118" width="82" height="30" rx="5" fill="#fed7aa" stroke="#fb923c" stroke-width="1"/>
+  <text x="357" y="138" text-anchor="middle" font-size="10" fill="#9a3412">Output B</text>
+  <rect x="316" y="156" width="82" height="30" rx="5" fill="#fed7aa" stroke="#fb923c" stroke-width="1"/>
+  <text x="357" y="176" text-anchor="middle" font-size="10" fill="#9a3412">Output C</text>
+
+  <line x1="398" y1="131" x2="418" y2="131" stroke="#6b7280" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Human ranks -->
+  <rect x="420" y="110" width="88" height="36" rx="6" fill="#fde68a" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="464" y="128" text-anchor="middle" font-size="11" fill="#92400e">Human</text>
+  <text x="464" y="142" text-anchor="middle" font-size="11" fill="#92400e">ranks</text>
+
+  <line x1="464" y1="146" x2="464" y2="166" stroke="#6b7280" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- RM -->
+  <rect x="400" y="196" width="110" height="50" rx="8" fill="#fdba74" stroke="#f97316" stroke-width="2"/>
+  <text x="455" y="218" text-anchor="middle" font-size="12" font-weight="700" fill="#7c2d12">Reward</text>
+  <text x="455" y="234" text-anchor="middle" font-size="11" fill="#7c2d12">Model (RM)</text>
+
+  <text x="427" y="278" text-anchor="middle" font-size="10" fill="#c2410c">Scores outputs based on</text>
+  <text x="427" y="292" text-anchor="middle" font-size="10" fill="#c2410c">human preferences</text>
+
+  <!-- ── Step 3: PPO ── -->
+  <rect x="586" y="10" width="258" height="295" rx="10" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+  <text x="715" y="34" text-anchor="middle" font-size="12" font-weight="700" fill="#1d4ed8">Step 3</text>
+  <text x="715" y="52" text-anchor="middle" font-size="11" fill="#374151">Optimize policy against</text>
+  <text x="715" y="66" text-anchor="middle" font-size="11" fill="#374151">reward model using PPO</text>
+
+  <!-- New prompt -->
+  <rect x="604" y="80" width="90" height="30" rx="5" fill="#dbeafe" stroke="#60a5fa" stroke-width="1.5"/>
+  <text x="649" y="100" text-anchor="middle" font-size="11" fill="#1d4ed8">New Prompt</text>
+
+  <line x1="649" y1="110" x2="649" y2="130" stroke="#6b7280" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- PPO Policy -->
+  <rect x="604" y="132" width="90" height="40" rx="6" fill="#3b82f6" stroke="#2563eb" stroke-width="2"/>
+  <text x="649" y="150" text-anchor="middle" font-size="11" font-weight="700" fill="white">PPO</text>
+  <text x="649" y="164" text-anchor="middle" font-size="10" fill="white">Policy</text>
+
+  <line x1="649" y1="172" x2="649" y2="192" stroke="#6b7280" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Output -->
+  <rect x="604" y="194" width="90" height="30" rx="5" fill="#dbeafe" stroke="#60a5fa" stroke-width="1.5"/>
+  <text x="649" y="214" text-anchor="middle" font-size="11" fill="#1d4ed8">Output</text>
+
+  <line x1="694" y1="209" x2="714" y2="209" stroke="#6b7280" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- RM score -->
+  <rect x="716" y="186" width="90" height="46" rx="6" fill="#fdba74" stroke="#f97316" stroke-width="1.5"/>
+  <text x="761" y="204" text-anchor="middle" font-size="11" fill="#7c2d12">RM</text>
+  <text x="761" y="218" text-anchor="middle" font-size="10" fill="#7c2d12">reward rₖ</text>
+  <text x="761" y="230" text-anchor="middle" font-size="10" fill="#7c2d12">score</text>
+
+  <!-- feedback arrow back to PPO -->
+  <line x1="761" y1="186" x2="761" y2="152" stroke="#e11d48" stroke-width="1.5"/>
+  <line x1="761" y1="152" x2="696" y2="152" stroke="#e11d48" stroke-width="1.5" marker-end="url(#a)"/>
+  <text x="730" y="145" text-anchor="middle" font-size="10" fill="#e11d48">update</text>
+
+  <text x="715" y="278" text-anchor="middle" font-size="10" fill="#1d4ed8">Policy updated to maximize</text>
+  <text x="715" y="292" text-anchor="middle" font-size="10" fill="#1d4ed8">reward (human preferences)</text>
+</svg>

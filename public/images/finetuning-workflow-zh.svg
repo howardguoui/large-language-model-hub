@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 740 330" font-family="system-ui,-apple-system,sans-serif">
+  <rect width="740" height="330" fill="#f8fafc" rx="14"/>
+
+  <defs>
+    <marker id="arr-r" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0,10 3.5,0 7" fill="#3b82f6"/>
+    </marker>
+    <marker id="arr-u" markerWidth="7" markerHeight="10" refX="3.5" refY="9" orient="auto">
+      <polygon points="0 10,3.5 0,7 10" fill="#6b7280"/>
+    </marker>
+  </defs>
+
+  <!-- ── Source Model box ── -->
+  <rect x="30" y="55" width="200" height="185" rx="10" fill="white" stroke="#93c5fd" stroke-width="2"/>
+  <text x="130" y="42" text-anchor="middle" font-size="14" font-weight="700" fill="#1e40af">源模型</text>
+
+  <rect x="48" y="70"  width="164" height="36" rx="6" fill="#dbeafe" stroke="#93c5fd" stroke-width="1"/>
+  <text x="130" y="93"  text-anchor="middle" font-size="13" fill="#1e40af">第 N 层</text>
+
+  <rect x="48" y="114" width="164" height="36" rx="6" fill="#dbeafe" stroke="#93c5fd" stroke-width="1"/>
+  <text x="130" y="137" text-anchor="middle" font-size="13" fill="#1e40af">···</text>
+
+  <rect x="48" y="158" width="164" height="36" rx="6" fill="#dbeafe" stroke="#93c5fd" stroke-width="1"/>
+  <text x="130" y="181" text-anchor="middle" font-size="13" fill="#1e40af">第 1 层</text>
+
+  <!-- Source Dataset -->
+  <rect x="45" y="270" width="170" height="40" rx="8" fill="#dcfce7" stroke="#86efac" stroke-width="1.5"/>
+  <text x="130" y="295" text-anchor="middle" font-size="13" font-weight="600" fill="#166534">源数据集</text>
+
+  <!-- pre-train arrow up -->
+  <line x1="130" y1="270" x2="130" y2="242" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arr-u)"/>
+  <text x="138" y="260" font-size="11" fill="#6b7280">预训练</text>
+
+  <!-- ── Copy arrow ── -->
+  <line x1="230" y1="148" x2="500" y2="148" stroke="#3b82f6" stroke-width="2" marker-end="url(#arr-r)"/>
+  <text x="365" y="140" text-anchor="middle" font-size="12" font-weight="600" fill="#3b82f6">复制</text>
+
+  <!-- ── Target Model box ── -->
+  <rect x="500" y="35" width="210" height="225" rx="10" fill="white" stroke="#93c5fd" stroke-width="2"/>
+  <text x="605" y="22" text-anchor="middle" font-size="14" font-weight="700" fill="#1e40af">目标模型</text>
+
+  <rect x="516" y="50"  width="178" height="34" rx="6" fill="#dbeafe" stroke="#93c5fd" stroke-width="1"/>
+  <text x="605" y="72"  text-anchor="middle" font-size="12" fill="#1e40af">第 N 层（复制）</text>
+
+  <rect x="516" y="92"  width="178" height="34" rx="6" fill="#dbeafe" stroke="#93c5fd" stroke-width="1"/>
+  <text x="605" y="114" text-anchor="middle" font-size="13" fill="#1e40af">···</text>
+
+  <rect x="516" y="134" width="178" height="34" rx="6" fill="#dbeafe" stroke="#93c5fd" stroke-width="1"/>
+  <text x="605" y="156" text-anchor="middle" font-size="12" fill="#1e40af">第 1 层（复制）</text>
+
+  <!-- Output layer (randomly initialized) -->
+  <rect x="516" y="178" width="178" height="62" rx="6" fill="#fefce8" stroke="#fbbf24" stroke-width="1.5"/>
+  <text x="605" y="203" text-anchor="middle" font-size="13" font-weight="600" fill="#92400e">输出层</text>
+  <text x="605" y="224" text-anchor="middle" font-size="11" fill="#92400e">（随机初始化）</text>
+
+  <!-- Target Dataset -->
+  <rect x="515" y="290" width="180" height="40" rx="8" fill="#dcfce7" stroke="#86efac" stroke-width="1.5"/>
+  <text x="605" y="315" text-anchor="middle" font-size="13" font-weight="600" fill="#166534">目标数据集</text>
+
+  <!-- fine-tune arrow up -->
+  <line x1="605" y1="290" x2="605" y2="242" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arr-u)"/>
+  <text x="614" y="270" font-size="11" fill="#6b7280">微调</text>
+</svg>
